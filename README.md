@@ -62,7 +62,7 @@ cPanel Pilot gives your AI unprecedented control over your hosting infrastructur
 | Feature | Description |
 | :--- | :--- |
 | **Operations** | List, create, read, edit, and delete files inside your hosting account. |
-| **Uploads** | Upload single or multiple local files directly from your computer to cPanel via MCP. |
+| **Uploads** | Upload single files, multiple files to different destinations, or entire local directories directly to cPanel via MCP. |
 | **Archives** | Extract `.zip` and `.tar.gz` archives directly on the server. |
 | **Security** | Change CHMOD permissions easily for security and execution. |
 | **Metrics** | Check account quota, consumption, and storage limits. |
