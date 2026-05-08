@@ -93,30 +93,38 @@ export function registerFileTools(server: McpServer, client: CpanelClient) {
 
   server.tool(
     "upload_file",
-    "Upload a local file from your computer to the cPanel server",
+    "Upload one or multiple local files from your computer to the cPanel server",
     {
-      local_file_path: z.string().describe("Absolute path to the local file on your computer (e.g., C:/Users/name/image.png)"),
-      remote_path: z.string().describe("Full destination path on cPanel including filename (e.g., /home/user/public_html/image.png)"),
+      local_file_paths: z.array(z.string()).describe("Array of absolute paths to the local files on your computer (e.g., ['C:/Users/name/image.png', 'C:/Users/name/doc.pdf'])"),
+      remote_dir: z.string().describe("Destination directory on cPanel (e.g., /home/user/public_html)"),
     },
-    async ({ local_file_path, remote_path }) =>
+    async ({ local_file_paths, remote_dir }) =>
       handleToolCall(async () => {
         try {
-          // Read the local file
-          const fileBuffer = await fs.readFile(local_file_path);
-          const { dir, file } = splitPath(remote_path);
+          const filesToUpload = [];
+          
+          for (let i = 0; i < local_file_paths.length; i++) {
+            const localPath = local_file_paths[i];
+            const fileBuffer = await fs.readFile(localPath);
+            const fileName = pathModule.basename(localPath);
+            
+            filesToUpload.push({
+              field: `file-${i + 1}`,
+              name: fileName,
+              content: fileBuffer
+            });
+          }
           
           const result = await client.uapiPostMultipart(
             "Fileman",
             "upload_files",
-            { dir },
-            "file-1",
-            file,
-            fileBuffer
+            { dir: remote_dir },
+            filesToUpload
           );
           
-          return formatSuccess(`File uploaded successfully from ${local_file_path} to ${remote_path}`, result.data);
+          return formatSuccess(`Successfully uploaded ${filesToUpload.length} file(s) to ${remote_dir}`, result.data);
         } catch (error: any) {
-          throw new Error(`Failed to read local file or upload: ${error.message}`);
+          throw new Error(`Failed to read local files or upload: ${error.message}`);
         }
       })
   );

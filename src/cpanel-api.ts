@@ -279,34 +279,37 @@ export class CpanelClient {
     module: string,
     func: string,
     params: Record<string, string>,
-    fileField: string,
-    fileName: string,
-    fileContent: Buffer
+    files: { field: string; name: string; content: Buffer }[]
   ): Promise<CpanelApiResponse> {
     const url = `${this.baseUrl}/execute/${encodeURIComponent(module)}/${encodeURIComponent(func)}`;
     
     console.error(`[API] UAPI POST MULTIPART ${module}::${func}`);
 
     const boundary = `----WebKitFormBoundary${Math.random().toString(36).substring(2)}`;
-    let body = '';
+    let bodyPrefix = '';
 
     // Add regular parameters
     for (const [key, value] of Object.entries(params)) {
-      body += `--${boundary}\r\n`;
-      body += `Content-Disposition: form-data; name="${key}"\r\n\r\n`;
-      body += `${value}\r\n`;
+      bodyPrefix += `--${boundary}\r\n`;
+      bodyPrefix += `Content-Disposition: form-data; name="${key}"\r\n\r\n`;
+      bodyPrefix += `${value}\r\n`;
     }
 
-    // Add file parameter
-    body += `--${boundary}\r\n`;
-    body += `Content-Disposition: form-data; name="${fileField}"; filename="${fileName}"\r\n`;
-    body += `Content-Type: application/octet-stream\r\n\r\n`;
-    
-    const bodyBuffer = Buffer.concat([
-      Buffer.from(body, 'utf-8'),
-      fileContent,
-      Buffer.from(`\r\n--${boundary}--\r\n`, 'utf-8')
-    ]);
+    const buffers: Buffer[] = [Buffer.from(bodyPrefix, 'utf-8')];
+
+    // Add file parameters
+    for (const file of files) {
+      let fileHeader = `--${boundary}\r\n`;
+      fileHeader += `Content-Disposition: form-data; name="${file.field}"; filename="${file.name}"\r\n`;
+      fileHeader += `Content-Type: application/octet-stream\r\n\r\n`;
+      
+      buffers.push(Buffer.from(fileHeader, 'utf-8'));
+      buffers.push(file.content);
+      buffers.push(Buffer.from('\r\n', 'utf-8'));
+    }
+
+    buffers.push(Buffer.from(`--${boundary}--\r\n`, 'utf-8'));
+    const bodyBuffer = Buffer.concat(buffers);
 
     let lastError: Error | undefined;
 
