@@ -1,0 +1,43 @@
+{
+  "name": "cpanel-pilot-mcp",
+  "version": "1.0.0",
+  "description": "cPanel Pilot MCP — A comprehensive AI server for cPanel hosting management. Seamlessly control DNS, email, databases, domains, SSL, cron, security, backups, and more.",
+  "main": "build/index.js",
+  "type": "module",
+  "bin": {
+    "cpanel-pilot-mcp": "./build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rayss868/cPanel-Pilot-MCP"
+  },
+  "keywords": [
+    "mcp",
+    "cpanel",
+    "hosting",
+    "cpanel-pilot",
+    "model-context-protocol",
+    "ai",
+    "web-hosting",
+    "automation"
+  ],
+  "author": "rayss868",
+  "license": "ISC",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "typescript": "^6.0.3"
+  }
+}
