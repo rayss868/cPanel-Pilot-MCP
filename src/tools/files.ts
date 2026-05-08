@@ -3,6 +3,8 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { CpanelClient } from "../cpanel-api.js";
 import { handleToolCall, formatData, formatSuccess } from "../tool-helpers.js";
 import { splitPath, validatePath } from "../validation.js";
+import fs from "node:fs/promises";
+import pathModule from "node:path";
 
 export function registerFileTools(server: McpServer, client: CpanelClient) {
   server.tool(
@@ -86,6 +88,36 @@ export function registerFileTools(server: McpServer, client: CpanelClient) {
           file,
         });
         return formatSuccess(`Deleted: ${path}`, result.data);
+      })
+  );
+
+  server.tool(
+    "upload_file",
+    "Upload a local file from your computer to the cPanel server",
+    {
+      local_file_path: z.string().describe("Absolute path to the local file on your computer (e.g., C:/Users/name/image.png)"),
+      remote_path: z.string().describe("Full destination path on cPanel including filename (e.g., /home/user/public_html/image.png)"),
+    },
+    async ({ local_file_path, remote_path }) =>
+      handleToolCall(async () => {
+        try {
+          // Read the local file
+          const fileBuffer = await fs.readFile(local_file_path);
+          const { dir, file } = splitPath(remote_path);
+          
+          const result = await client.uapiPostMultipart(
+            "Fileman",
+            "upload_files",
+            { dir },
+            "file-1",
+            file,
+            fileBuffer
+          );
+          
+          return formatSuccess(`File uploaded successfully from ${local_file_path} to ${remote_path}`, result.data);
+        } catch (error: any) {
+          throw new Error(`Failed to read local file or upload: ${error.message}`);
+        }
       })
   );
 

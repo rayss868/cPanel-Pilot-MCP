@@ -275,6 +275,135 @@ export class CpanelClient {
     return result;
   }
 
+  async uapiPostMultipart(
+    module: string,
+    func: string,
+    params: Record<string, string>,
+    fileField: string,
+    fileName: string,
+    fileContent: Buffer
+  ): Promise<CpanelApiResponse> {
+    const url = `${this.baseUrl}/execute/${encodeURIComponent(module)}/${encodeURIComponent(func)}`;
+    
+    console.error(`[API] UAPI POST MULTIPART ${module}::${func}`);
+
+    const boundary = `----WebKitFormBoundary${Math.random().toString(36).substring(2)}`;
+    let body = '';
+
+    // Add regular parameters
+    for (const [key, value] of Object.entries(params)) {
+      body += `--${boundary}\r\n`;
+      body += `Content-Disposition: form-data; name="${key}"\r\n\r\n`;
+      body += `${value}\r\n`;
+    }
+
+    // Add file parameter
+    body += `--${boundary}\r\n`;
+    body += `Content-Disposition: form-data; name="${fileField}"; filename="${fileName}"\r\n`;
+    body += `Content-Type: application/octet-stream\r\n\r\n`;
+    
+    const bodyBuffer = Buffer.concat([
+      Buffer.from(body, 'utf-8'),
+      fileContent,
+      Buffer.from(`\r\n--${boundary}--\r\n`, 'utf-8')
+    ]);
+
+    let lastError: Error | undefined;
+
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        const raw = await new Promise<string>((resolve, reject) => {
+          const parsed = new URL(url);
+          const isHttps = parsed.protocol === "https:";
+          const transport = isHttps ? https : http;
+
+          const options: https.RequestOptions = {
+            hostname: parsed.hostname,
+            port: parsed.port,
+            path: parsed.pathname + parsed.search,
+            method: 'POST',
+            headers: {
+              ...this.buildHeaders(),
+              "Content-Type": `multipart/form-data; boundary=${boundary}`,
+              "Content-Length": bodyBuffer.length.toString(),
+            },
+            agent: isHttps ? this.httpsAgent : this.httpAgent,
+            timeout: this.timeoutMs,
+          };
+
+          const req = transport.request(options, (res) => {
+            const chunks: Buffer[] = [];
+            let totalBytes = 0;
+
+            res.on("data", (chunk: Buffer) => {
+              totalBytes += chunk.length;
+              if (totalBytes > MAX_RESPONSE_BYTES) {
+                req.destroy();
+                reject(new CpanelApiError(`Response exceeded ${MAX_RESPONSE_BYTES} bytes limit`));
+                return;
+              }
+              chunks.push(chunk);
+            });
+
+            res.on("end", () => {
+              const responseBody = Buffer.concat(chunks).toString("utf-8");
+              if (res.statusCode && res.statusCode >= 400) {
+                reject(new CpanelApiError(`HTTP ${res.statusCode}: ${responseBody.substring(0, 500)}`, res.statusCode));
+              } else {
+                resolve(responseBody);
+              }
+            });
+
+            res.on("error", (err) => reject(new CpanelApiError(`Response error: ${err.message}`)));
+          });
+
+          req.on("timeout", () => {
+            req.destroy();
+            reject(new CpanelApiError(`Request timed out after ${this.timeoutMs}ms`));
+          });
+
+          req.on("error", (err) => reject(new CpanelApiError(`Request failed: ${err.message}`)));
+
+          req.write(bodyBuffer);
+          req.end();
+        });
+
+        let parsed: { result: CpanelApiResponse };
+        try {
+          parsed = JSON.parse(raw);
+        } catch {
+          throw new CpanelApiError(`Invalid JSON response from UAPI ${module}::${func}`);
+        }
+
+        const result = parsed.result ?? (parsed as unknown as CpanelApiResponse);
+
+        if (result.status === 0 && result.errors?.length) {
+          throw new CpanelApiError(
+            `UAPI ${module}::${func} failed: ${result.errors.join(", ")}`,
+            undefined,
+            result.errors
+          );
+        }
+
+        return result;
+      } catch (err) {
+        lastError = err as Error;
+
+        if (err instanceof CpanelApiError && err.statusCode && err.statusCode < 500) {
+          throw err;
+        }
+
+        if (attempt < MAX_RETRIES) {
+          const delay = RETRY_BASE_DELAY_MS * Math.pow(2, attempt);
+          console.error(`[API] Retry ${attempt + 1}/${MAX_RETRIES} after ${delay}ms`);
+          await new Promise((r) => setTimeout(r, delay));
+        }
+      }
+    }
+
+    throw lastError;
+  }
+
   async api2(
     module: string,
     func: string,

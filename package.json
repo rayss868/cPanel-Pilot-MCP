@@ -1,6 +1,6 @@
 {
   "name": "cpanel-pilot-mcp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "cPanel Pilot MCP — A comprehensive AI server for cPanel hosting management. Seamlessly control DNS, email, databases, domains, SSL, cron, security, backups, and more.",
   "main": "build/index.js",
   "type": "module",

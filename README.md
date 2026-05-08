@@ -6,7 +6,7 @@
 **The Ultimate AI Bridge for Web Hosting Management**
 
 [![License](https://img.shields.io/badge/license-ISC-blue.svg?style=for-the-badge)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-brightgreen.svg?style=for-the-badge)](#)
+[![Version](https://img.shields.io/badge/version-1.1.0-brightgreen.svg?style=for-the-badge)](#)
 [![Author](https://img.shields.io/badge/author-rayss868-orange.svg?style=for-the-badge)](https://github.com/rayss868)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](#)
 [![cPanel](https://img.shields.io/badge/cPanel-FF6C2C?style=for-the-badge&logo=cpanel&logoColor=white)](#)
@@ -62,6 +62,7 @@ cPanel Pilot gives your AI unprecedented control over your hosting infrastructur
 | Feature | Description |
 | :--- | :--- |
 | **Operations** | List, create, read, edit, and delete files inside your hosting account. |
+| **Uploads** | Upload local files directly from your computer to cPanel via MCP. |
 | **Archives** | Extract `.zip` and `.tar.gz` archives directly on the server. |
 | **Security** | Change CHMOD permissions easily for security and execution. |
 | **Metrics** | Check account quota, consumption, and storage limits. |
