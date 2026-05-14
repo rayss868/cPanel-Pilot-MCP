@@ -7,7 +7,7 @@ import { validatePath } from "../validation.js";
 export function registerVersionControlTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "list_git_repos",
-    "List all Git repositories managed by cPanel",
+    "List all Git repositories managed by cPanel.",
     {},
     async () =>
       handleToolCall(async () => {

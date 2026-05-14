@@ -6,7 +6,7 @@ import { handleToolCall, formatData, formatSuccess } from "../tool-helpers.js";
 export function registerFtpTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "list_ftp_accounts",
-    "List all FTP accounts with disk usage",
+    "List all FTP accounts in this cPanel account together with their disk usage.",
     {},
     async () =>
       handleToolCall(async () => {
@@ -17,13 +17,13 @@ export function registerFtpTools(server: McpServer, client: CpanelClient) {
 
   server.tool(
     "create_ftp_account",
-    "Create a new FTP account",
+    "Create a new FTP account on cPanel.",
     {
-      user: z.string().describe("FTP username"),
-      password: z.string().describe("FTP password"),
-      quota: z.string().default("0").describe("Disk quota in MB (0 for unlimited)"),
-      homedir: z.string().optional().describe("Home directory path (relative to account home)"),
-      domain: z.string().optional().describe("Associated domain"),
+      user: z.string().describe("FTP username only. Example: 'deploy' or 'media'. Do not include @domain here unless your provider requires it."),
+      password: z.string().describe("Password for the FTP account. Example: 'StrongPassword123!'."),
+      quota: z.string().default("0").describe("Disk quota in MB. Use '0' for unlimited. Example: '0' or '2048'."),
+      homedir: z.string().optional().describe("Optional home directory path relative to the account home. Example: 'public_html/uploads' or 'public_html/site'."),
+      domain: z.string().optional().describe("Optional associated domain. Example: 'example.com'."),
     },
     async ({ user, password, quota, homedir, domain }) =>
       handleToolCall(async () => {

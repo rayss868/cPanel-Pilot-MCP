@@ -7,7 +7,7 @@ import { validateDomain } from "../validation.js";
 export function registerMetricsTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "get_bandwidth_usage",
-    "Get bandwidth usage statistics for the account",
+    "Get bandwidth usage statistics for the account.",
     {},
     async () =>
       handleToolCall(async () => {

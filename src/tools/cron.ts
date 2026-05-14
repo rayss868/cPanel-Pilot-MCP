@@ -7,7 +7,7 @@ import { validateCronField } from "../validation.js";
 export function registerCronTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "list_cron_jobs",
-    "List all cron jobs on the account",
+    "List all cron jobs on the account.",
     {},
     async () =>
       handleToolCall(async () => {
@@ -18,14 +18,14 @@ export function registerCronTools(server: McpServer, client: CpanelClient) {
 
   server.tool(
     "create_cron_job",
-    "Create a new cron job",
+    "Create a new cron job.",
     {
-      command: z.string().describe("Command to execute"),
-      minute: z.string().default("0").describe("Minute (0-59 or *)"),
-      hour: z.string().default("*").describe("Hour (0-23 or *)"),
-      day: z.string().default("*").describe("Day of month (1-31 or *)"),
-      month: z.string().default("*").describe("Month (1-12 or *)"),
-      weekday: z.string().default("*").describe("Day of week (0-6, 0=Sunday, or *)"),
+      command: z.string().describe("Command to execute."),
+      minute: z.string().default("0").describe("Minute (0-59 or *)."),
+      hour: z.string().default("*").describe("Hour (0-23 or *)."),
+      day: z.string().default("*").describe("Day of month (1-31 or *)."),
+      month: z.string().default("*").describe("Month (1-12 or *)."),
+      weekday: z.string().default("*").describe("Day of week (0-6, 0=Sunday, or *)."),
     },
     async ({ command, minute, hour, day, month, weekday }) =>
       handleToolCall(async () => {

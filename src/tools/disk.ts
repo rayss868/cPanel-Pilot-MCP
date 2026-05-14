@@ -6,7 +6,7 @@ import { handleToolCall, formatData } from "../tool-helpers.js";
 export function registerDiskTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "get_disk_usage",
-    "Get account disk space usage summary (quota, used, limits)",
+    "Get account disk space usage summary, including quota, usage, and limits.",
     {},
     async () =>
       handleToolCall(async () => {

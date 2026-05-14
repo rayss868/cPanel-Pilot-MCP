@@ -7,15 +7,15 @@ import { validatePath } from "../validation.js";
 export function registerBackupTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "create_full_backup",
-    "Create a full account backup",
+    "Create a full account backup.",
     {
-      destination: z.enum(["homedir", "ftp", "scp"]).default("homedir").describe("Backup destination"),
-      email: z.string().optional().describe("Email address to notify when backup completes"),
-      server: z.string().optional().describe("Remote server address (for FTP/SCP)"),
-      user: z.string().optional().describe("Remote server username (for FTP/SCP)"),
-      password: z.string().optional().describe("Remote server password (for FTP/SCP)"),
-      port: z.string().optional().describe("Remote server port (for FTP/SCP)"),
-      rdir: z.string().optional().describe("Remote directory path (for FTP/SCP)"),
+      destination: z.enum(["homedir", "ftp", "scp"]).default("homedir").describe("Backup destination. Use 'homedir', 'ftp', or 'scp'."),
+      email: z.string().optional().describe("Email address to notify when backup completes."),
+      server: z.string().optional().describe("Remote server address for FTP or SCP backups."),
+      user: z.string().optional().describe("Remote server username for FTP or SCP backups."),
+      password: z.string().optional().describe("Remote server password for FTP or SCP backups."),
+      port: z.string().optional().describe("Remote server port for FTP or SCP backups."),
+      rdir: z.string().optional().describe("Remote directory path for FTP or SCP backups."),
     },
     async ({ destination, email, server: remoteServer, user, password, port, rdir }) =>
       handleToolCall(async () => {

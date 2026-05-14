@@ -6,7 +6,7 @@ import { handleToolCall, formatData, formatSuccess } from "../tool-helpers.js";
 export function registerPostgresqlTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "list_postgresql_databases",
-    "List all PostgreSQL databases",
+    "List all PostgreSQL databases available in this cPanel account.",
     {},
     async () =>
       handleToolCall(async () => {

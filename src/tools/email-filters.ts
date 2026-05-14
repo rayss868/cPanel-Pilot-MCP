@@ -6,8 +6,8 @@ import { handleToolCall, formatData, formatSuccess } from "../tool-helpers.js";
 export function registerEmailFilterTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "list_email_filters",
-    "List all email filters for an account",
-    { account: z.string().describe("Email account (user@domain.com) or empty for main account") },
+    "List all email filters for an account.",
+    { account: z.string().describe("Email account (user@domain.com) or empty for the main account.") },
     async ({ account }) =>
       handleToolCall(async () => {
         const result = await client.uapi("Email", "list_filters", { account });
@@ -17,10 +17,10 @@ export function registerEmailFilterTools(server: McpServer, client: CpanelClient
 
   server.tool(
     "delete_email_filter",
-    "Delete an email filter",
+    "Delete an email filter.",
     {
-      account: z.string().describe("Email account (user@domain.com)"),
-      filtername: z.string().describe("Name of the filter to delete"),
+      account: z.string().describe("Email account (user@domain.com)."),
+      filtername: z.string().describe("Name of the filter to delete."),
     },
     async ({ account, filtername }) =>
       handleToolCall(async () => {
@@ -31,10 +31,10 @@ export function registerEmailFilterTools(server: McpServer, client: CpanelClient
 
   server.tool(
     "trace_email_filter",
-    "Test email filters against a message to see which rules match",
+    "Test email filters against a message to see which rules match.",
     {
-      account: z.string().describe("Email account (user@domain.com)"),
-      msg: z.string().describe("Test message content to trace through filters"),
+      account: z.string().describe("Email account (user@domain.com)."),
+      msg: z.string().describe("Test message content to trace through filters."),
     },
     async ({ account, msg }) =>
       handleToolCall(async () => {

@@ -6,7 +6,7 @@ import { handleToolCall, formatData, formatSuccess } from "../tool-helpers.js";
 export function registerTokenTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "list_api_tokens",
-    "List all cPanel API tokens for the account",
+    "List all cPanel API tokens for the account.",
     {},
     async () =>
       handleToolCall(async () => {

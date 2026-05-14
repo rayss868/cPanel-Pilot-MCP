@@ -7,7 +7,7 @@ import { validateDomain, validatePath } from "../validation.js";
 export function registerPassengerTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "list_passenger_apps",
-    "List all registered Node.js/Python/Ruby applications",
+    "List all registered Node.js, Python, or Ruby applications.",
     {},
     async () =>
       handleToolCall(async () => {
@@ -18,15 +18,15 @@ export function registerPassengerTools(server: McpServer, client: CpanelClient) 
 
   server.tool(
     "register_passenger_app",
-    "Register a new Node.js, Python, or Ruby application",
+    "Register a new Node.js, Python, or Ruby application.",
     {
-      name: z.string().describe("Application name"),
-      path: z.string().describe("Application root path (e.g., /home/user/myapp)"),
-      domain: z.string().describe("Domain to deploy on"),
-      deployment_mode: z.enum(["production", "development"]).default("production").describe("Deployment mode"),
-      base_uri: z.string().default("/").describe("Base URI path"),
-      python_path: z.string().optional().describe("Path to Python binary (for Python apps)"),
-      nodejs_version: z.string().optional().describe("Node.js version (for Node.js apps)"),
+      name: z.string().describe("Application name."),
+      path: z.string().describe("Application root path. Example: /home/user/myapp."),
+      domain: z.string().describe("Domain to deploy on. Example: example.com."),
+      deployment_mode: z.enum(["production", "development"]).default("production").describe("Deployment mode. Use 'production' or 'development'."),
+      base_uri: z.string().default("/").describe("Base URI path. Example: /."),
+      python_path: z.string().optional().describe("Path to Python binary for Python apps."),
+      nodejs_version: z.string().optional().describe("Node.js version for Node.js apps."),
     },
     async ({ name, path, domain, deployment_mode, base_uri, python_path, nodejs_version }) =>
       handleToolCall(async () => {

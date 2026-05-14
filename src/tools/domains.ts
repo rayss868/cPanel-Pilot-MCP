@@ -7,7 +7,7 @@ import { validateDomain } from "../validation.js";
 export function registerDomainTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "list_domains",
-    "List all domains on the account (main, addon, sub, parked)",
+    "List all domains on this cPanel account, including main, addon, subdomains, and parked domains.",
     {},
     async () =>
       handleToolCall(async () => {
@@ -18,8 +18,8 @@ export function registerDomainTools(server: McpServer, client: CpanelClient) {
 
   server.tool(
     "get_domain_info",
-    "Get detailed information about a specific domain",
-    { domain: z.string().describe("Domain name") },
+    "Get detailed information about one specific domain in cPanel.",
+    { domain: z.string().describe("Domain name to inspect. Example: 'example.com' or 'blog.example.com'.") },
     async ({ domain }) =>
       handleToolCall(async () => {
         const d = validateDomain(domain);

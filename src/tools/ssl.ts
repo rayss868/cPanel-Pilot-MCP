@@ -7,7 +7,7 @@ import { validateDomain } from "../validation.js";
 export function registerSslTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "list_ssl_certificates",
-    "List all installed SSL certificates",
+    "List all installed SSL certificates.",
     {},
     async () =>
       handleToolCall(async () => {

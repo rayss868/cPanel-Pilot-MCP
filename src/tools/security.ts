@@ -9,7 +9,7 @@ export function registerSecurityTools(server: McpServer, client: CpanelClient) {
 
   server.tool(
     "list_blocked_ips",
-    "List all blocked IP addresses",
+    "List all blocked IP addresses.",
     {},
     async () =>
       handleToolCall(async () => {

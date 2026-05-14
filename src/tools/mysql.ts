@@ -6,7 +6,7 @@ import { handleToolCall, formatData, formatSuccess } from "../tool-helpers.js";
 export function registerMysqlTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "list_mysql_databases",
-    "List all MySQL databases on the account",
+    "List all MySQL databases available in this cPanel account.",
     {},
     async () =>
       handleToolCall(async () => {

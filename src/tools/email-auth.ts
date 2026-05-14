@@ -7,8 +7,8 @@ import { validateDomain } from "../validation.js";
 export function registerEmailAuthTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "enable_dkim",
-    "Enable DKIM (DomainKeys Identified Mail) for a domain",
-    { domain: z.string().describe("Domain name") },
+    "Enable DKIM (DomainKeys Identified Mail) for a domain.",
+    { domain: z.string().describe("Domain name. Example: 'example.com'.") },
     async ({ domain }) =>
       handleToolCall(async () => {
         const d = validateDomain(domain);
@@ -19,8 +19,8 @@ export function registerEmailAuthTools(server: McpServer, client: CpanelClient) 
 
   server.tool(
     "disable_dkim",
-    "Disable DKIM for a domain",
-    { domain: z.string().describe("Domain name") },
+    "Disable DKIM for a domain.",
+    { domain: z.string().describe("Domain name. Example: 'example.com'.") },
     async ({ domain }) =>
       handleToolCall(async () => {
         const d = validateDomain(domain);
@@ -31,7 +31,7 @@ export function registerEmailAuthTools(server: McpServer, client: CpanelClient) 
 
   server.tool(
     "ensure_dkim_keys",
-    "Ensure DKIM keys exist for all domains (generates missing keys)",
+    "Ensure DKIM keys exist for all domains. This generates any missing DKIM keys.",
     {},
     async () =>
       handleToolCall(async () => {
@@ -42,7 +42,7 @@ export function registerEmailAuthTools(server: McpServer, client: CpanelClient) 
 
   server.tool(
     "validate_dkim",
-    "Validate current DKIM configuration for all domains",
+    "Validate the current DKIM configuration for all domains on the account.",
     {},
     async () =>
       handleToolCall(async () => {
@@ -53,7 +53,7 @@ export function registerEmailAuthTools(server: McpServer, client: CpanelClient) 
 
   server.tool(
     "validate_spf",
-    "Validate current SPF records for all domains",
+    "Validate the current SPF records for all domains on the account.",
     {},
     async () =>
       handleToolCall(async () => {
@@ -64,7 +64,7 @@ export function registerEmailAuthTools(server: McpServer, client: CpanelClient) 
 
   server.tool(
     "install_spf_records",
-    "Install/update SPF records for all domains",
+    "Install or update SPF records for all domains on the account.",
     {},
     async () =>
       handleToolCall(async () => {
@@ -75,7 +75,7 @@ export function registerEmailAuthTools(server: McpServer, client: CpanelClient) 
 
   server.tool(
     "validate_ptr_records",
-    "Validate current PTR (reverse DNS) records",
+    "Validate the current PTR (reverse DNS) records.",
     {},
     async () =>
       handleToolCall(async () => {

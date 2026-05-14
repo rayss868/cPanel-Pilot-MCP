@@ -6,7 +6,7 @@ import { handleToolCall, formatData, formatSuccess } from "../tool-helpers.js";
 export function registerTwoFactorAuthTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "get_2fa_status",
-    "Check if two-factor authentication is configured for the account",
+    "Check if two-factor authentication is configured for the account.",
     {},
     async () =>
       handleToolCall(async () => {

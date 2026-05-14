@@ -7,7 +7,7 @@ import { validateDomain } from "../validation.js";
 export function registerPhpTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "list_php_versions",
-    "List all installed PHP versions available on the server",
+    "List all installed PHP versions available on the server.",
     {},
     async () =>
       handleToolCall(async () => {
@@ -18,8 +18,8 @@ export function registerPhpTools(server: McpServer, client: CpanelClient) {
 
   server.tool(
     "get_php_version_for_domain",
-    "Get the current PHP version assigned to a domain",
-    { domain: z.string().describe("Domain name to check") },
+    "Get the current PHP version assigned to a domain.",
+    { domain: z.string().describe("Domain name to check. Example: 'example.com'.") },
     async ({ domain }) =>
       handleToolCall(async () => {
         const d = validateDomain(domain);

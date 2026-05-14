@@ -7,8 +7,8 @@ import { validateDomain } from "../validation.js";
 export function registerDnssecTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "enable_dnssec",
-    "Enable DNSSEC for a domain",
-    { domain: z.string().describe("Domain name") },
+    "Enable DNSSEC for a domain.",
+    { domain: z.string().describe("Domain name. Example: 'example.com'.") },
     async ({ domain }) =>
       handleToolCall(async () => {
         const d = validateDomain(domain);

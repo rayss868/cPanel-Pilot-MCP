@@ -188,6 +188,93 @@ Then configure using the absolute path to the `build/index.js` file as your `arg
 | `CPANEL_TIMEOUT_MS` | No | Request timeout in milliseconds (Default: `30000`) |
 | `CPANEL_VERIFY_SSL` | No | Set to `false` to disable SSL verification for self-signed certs |
 
+### 4. File Tool Parameters
+
+#### `list_files`
+```json
+{
+  "path": "/home/username/public_html"
+}
+```
+
+#### `create_file`
+```json
+{
+  "path": "/home/username/public_html/index.html",
+  "content": "<h1>Hello World</h1>"
+}
+```
+
+#### `read_file`
+```json
+{
+  "path": "/home/username/public_html/index.html"
+}
+```
+
+#### `edit_file`
+```json
+{
+  "path": "/home/username/public_html/index.html",
+  "content": "<h1>Updated Content</h1>"
+}
+```
+
+#### `delete_file`
+```json
+{
+  "path": "/home/username/public_html/old-file.txt"
+}
+```
+
+#### `upload_file`
+Supports single file, multi-file, multi-destination, and full directory upload.
+
+```json
+{
+  "uploads": [
+    {
+      "local_path": "C:/Users/name/Desktop/fileA.png",
+      "remote_dir": "/home/username/public_html/images",
+      "overwrite": true
+    },
+    {
+      "local_path": "C:/Users/name/Desktop/fileB.pdf",
+      "remote_dir": "/home/username/public_html/docs",
+      "overwrite": false
+    },
+    {
+      "local_path": "C:/Users/name/Desktop/my-folder",
+      "remote_dir": "/home/username/public_html/assets",
+      "overwrite": true
+    }
+  ]
+}
+```
+
+**Notes for `upload_file`:**
+- [`local_path`](src/tools/files.ts:99): can be a single file or a local directory.
+- [`remote_dir`](src/tools/files.ts:100): destination directory in cPanel.
+- [`overwrite`](src/tools/files.ts:101): optional boolean. If `true`, existing files with the same name will be overwritten.
+- If `local_path` is a directory, the upload preserves its internal folder structure.
+- You can mix file uploads and folder uploads in one request.
+
+#### `extract_archive`
+```json
+{
+  "path": "/home/username/public_html/site.zip",
+  "extract_to": "/home/username/public_html/site"
+}
+```
+
+#### `change_permissions`
+```json
+{
+  "path": "/home/username/public_html/script.sh",
+  "permissions": "0755"
+}
+```
+
 <details>
 <summary><b>🔐 How to get a cPanel API Token? (Click to expand)</b></summary>
 

@@ -6,7 +6,7 @@ import { handleToolCall, formatData, formatSuccess } from "../tool-helpers.js";
 export function registerFeatureTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "list_features",
-    "List all features available to the cPanel account",
+    "List all features available to the cPanel account.",
     {},
     async () =>
       handleToolCall(async () => {

@@ -7,7 +7,7 @@ import { validateEmail, validateDomain } from "../validation.js";
 export function registerEmailTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "list_email_accounts",
-    "List all email accounts with disk usage info",
+    "List all email accounts in this cPanel account together with mailbox disk usage.",
     {},
     async () =>
       handleToolCall(async () => {
@@ -18,11 +18,11 @@ export function registerEmailTools(server: McpServer, client: CpanelClient) {
 
   server.tool(
     "create_email_account",
-    "Create a new email account",
+    "Create a new email account on cPanel.",
     {
-      email: z.string().describe("Email address (user@domain.com)"),
-      password: z.string().describe("Password for the email account"),
-      quota: z.string().default("1024").describe("Mailbox quota in MB (0 for unlimited)"),
+      email: z.string().describe("Full email address to create. Example: 'hello@example.com' or 'support@mydomain.com'."),
+      password: z.string().describe("Password for the mailbox. Example: 'StrongPassword123!'."),
+      quota: z.string().default("1024").describe("Mailbox quota in MB. Use '0' for unlimited. Example: '1024' or '0'."),
     },
     async ({ email, password, quota }) =>
       handleToolCall(async () => {

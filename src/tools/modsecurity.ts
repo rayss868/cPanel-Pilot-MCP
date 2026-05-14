@@ -6,7 +6,7 @@ import { handleToolCall, formatData, formatSuccess } from "../tool-helpers.js";
 export function registerModSecurityTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "get_modsecurity_status",
-    "Check if ModSecurity (WAF) is installed and get domain status",
+    "Check if ModSecurity (WAF) is installed and get domain status.",
     {},
     async () =>
       handleToolCall(async () => {

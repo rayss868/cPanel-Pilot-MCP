@@ -7,8 +7,8 @@ import { validateDomain } from "../validation.js";
 export function registerDnsTools(server: McpServer, client: CpanelClient) {
   server.tool(
     "get_dns_records",
-    "Get all DNS records for a zone/domain",
-    { domain: z.string().describe("Domain name to get records for") },
+    "Get all DNS records for a domain zone in cPanel.",
+    { domain: z.string().describe("Domain name to inspect. Example: 'example.com' or 'sub.example.com'.") },
     async ({ domain }) =>
       handleToolCall(async () => {
         const zone = validateDomain(domain);
@@ -19,15 +19,15 @@ export function registerDnsTools(server: McpServer, client: CpanelClient) {
 
   server.tool(
     "add_dns_record",
-    "Add a DNS zone record (A, AAAA, CNAME, MX, TXT, SRV, CAA)",
+    "Add a DNS zone record such as A, AAAA, CNAME, MX, TXT, SRV, or CAA.",
     {
-      domain: z.string().describe("Domain/zone name"),
-      name: z.string().describe("Record name (e.g. subdomain or subdomain.domain.com.)"),
-      type: z.enum(["A", "AAAA", "CNAME", "MX", "TXT", "SRV", "CAA"]).describe("Record type"),
-      address: z.string().describe("Record value/address (use 'cname' param for CNAME, 'txtdata' for TXT)"),
-      ttl: z.string().default("14400").describe("TTL in seconds"),
-      priority: z.string().optional().describe("Priority (required for MX and SRV)"),
-      class: z.string().default("IN").describe("Record class"),
+      domain: z.string().describe("Domain/zone name. Example: 'example.com'."),
+      name: z.string().describe("Record name. Example: 'blog', 'blog.example.com.', '@', or '_acme-challenge'."),
+      type: z.enum(["A", "AAAA", "CNAME", "MX", "TXT", "SRV", "CAA"]).describe("DNS record type. Example: 'A', 'CNAME', 'TXT', or 'MX'."),
+      address: z.string().describe("Record value. Example A: '1.2.3.4', CNAME: 'target.example.com.', TXT: 'google-site-verification=abc123'."),
+      ttl: z.string().default("14400").describe("TTL in seconds. Example: '300' or '14400'."),
+      priority: z.string().optional().describe("Priority/preference value, mainly used for MX and SRV. Example: '10'."),
+      class: z.string().default("IN").describe("DNS class. Usually 'IN'."),
     },
     async ({ domain, name, type, address, ttl, priority, class: recordClass }) =>
       handleToolCall(async () => {
